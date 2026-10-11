@@ -39,7 +39,7 @@ class User:
         self._hash = hashlib.sha256((self._salt + nilai).encode()).hexdigest()
 
 def audit_log(riwayat):
-    
+
     def dekorator(fungsi_login):
         @functools.wraps(fungsi_login)
         def pembungkus(username, password):
@@ -68,3 +68,24 @@ def login(username, password):
     """Logika otentikasi murni: membuat User memicu semua validasi."""
     User(username, password)
     return True
+
+def main():
+    print("=== SKENARIO PENGUJIAN LOGIN ===\n")
+    skenario = [
+        ("Username tidak sesuai aturan (terlalu pendek)", "adi", "rahasia123"),
+        ("Username mengandung simbol/spasi", "budi santoso!", "rahasia123"),
+        ("Username bukan teks", None, "rahasia123"),
+        ("Password terlalu pendek", "cantika01", "abc12"),
+        ("Password tanpa angka", "cantika01", "passwordpanjang"),
+        ("Semua kriteria terpenuhi", "cantika01", "rahasia123"),
+    ]
+    for deskripsi, user, pw in skenario:
+        print(f"> {deskripsi}")
+        login(user, pw)
+        print()
+ 
+    print(f"Total entri audit trail: {len(riwayat_audit)}")
+ 
+ 
+if __name__ == "__main__":
+    main()
