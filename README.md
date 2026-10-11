@@ -35,4 +35,4 @@ python-advanced-case-study/
 
 - [x] Case 01: Analisis Nilai Mahasiswa (List Comprehension, Lambda, Sorting)
 - [x] Case 02: Streaming Data Sensor IoT Hemat Memori (Generator & Yield)
-- [ ] Case 03: Sistem Keamanan Akun & Audit Log Login (RegEx, Decorator, @property)
+- [x] Case 03: Sistem Keamanan Akun & Audit Log Login (RegEx, Decorator, @property)
