@@ -8,8 +8,8 @@ POLA_USERNAME = re.compile(r"[A-Za-z0-9]{5,}")
 POLA_PASSWORD = re.compile(r"(?=.*[0-9]).{8,}")   
 class User:
     def __init__(self, username, password):
-        self.username = username   # memicu setter -> validasi
-        self.password = password   # memicu setter -> validasi + hashing
+        self.username = username   
+        self.password = password   
  
     @property
     def username(self):
@@ -24,4 +24,16 @@ class User:
                 "Username harus minimal 5 karakter, hanya huruf dan angka (tanpa spasi/simbol)"
             )
         self._username = nilai
+    @property
+    def password(self):
+        # Password asli tidak pernah dikembalikan
+        raise AttributeError("Password tidak dapat dibaca")
  
+    @password.setter
+    def password(self, nilai):
+        if not isinstance(nilai, str):
+            raise ValueError("Password harus berupa teks")
+        if not POLA_PASSWORD.fullmatch(nilai):
+            raise ValueError("Password harus minimal 8 karakter dan memuat setidaknya satu angka")
+        self._salt = secrets.token_hex(8)
+        self._hash = hashlib.sha256((self._salt + nilai).encode()).hexdigest()
