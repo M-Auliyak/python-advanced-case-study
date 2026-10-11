@@ -37,3 +37,34 @@ class User:
             raise ValueError("Password harus minimal 8 karakter dan memuat setidaknya satu angka")
         self._salt = secrets.token_hex(8)
         self._hash = hashlib.sha256((self._salt + nilai).encode()).hexdigest()
+
+def audit_log(riwayat):
+    
+    def dekorator(fungsi_login):
+        @functools.wraps(fungsi_login)
+        def pembungkus(username, password):
+            waktu = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            try:
+                hasil = fungsi_login(username, password)
+                status, alasan = "BERHASIL", "-"
+            except ValueError as err:
+                hasil = False
+                status, alasan = "DITOLAK", str(err)
+            baris = f"[{waktu}] user={username!r:<14} status={status:<8} alasan={alasan}"
+            riwayat.append(baris)
+            print(baris)
+            return hasil
+ 
+        return pembungkus
+ 
+    return dekorator
+ 
+ 
+riwayat_audit = []
+ 
+ 
+@audit_log(riwayat_audit)
+def login(username, password):
+    """Logika otentikasi murni: membuat User memicu semua validasi."""
+    User(username, password)
+    return True
